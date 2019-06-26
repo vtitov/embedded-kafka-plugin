@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>3.37</version>
+        <relativePath />
+    </parent>
+    <groupId>io.jenkins.plugins</groupId>
+    <artifactId>embedded-kafka</artifactId>
+    <version>${revision}${changelist}</version>
+    <packaging>hpi</packaging>
+    <properties>
+        <revision>0.1.0</revision>
+        <changelist>-SNAPSHOT</changelist>
+
+        <jenkins.version>2.60.3</jenkins.version>
+        <java.level>8</java.level>
+        <!--<jenkins-test-harness.version>2.44</jenkins-test-harness.version>-->
+
+        <embedded.plugins.bom.version>0.1.0-SNAPSHOT</embedded.plugins.bom.version>
+        <embedded.config.version>0.1.0-SNAPSHOT</embedded.config.version>
+
+        <kafka.version>0.10.2.0</kafka.version>
+        <kafka.broker.version>0.10.2.0</kafka.broker.version>
+        <kafka.clients.version>0.10.2.0</kafka.clients.version>
+        <!--<version.kafka.clients>1.0.0</version.kafka.client>-->
+        <kafka.scala.version>2.11</kafka.scala.version>
+        <!--<version.zookeeper>3.4.10</version.zookeeper>-->
+
+        <lombok.version>1.16.14</lombok.version>
+        <vavr.version>0.10.0</vavr.version>
+    </properties>
+    <name>Embedded Kafka Plugin</name>
+    <description>Embedded Kafka Plugin</description>
+    <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <!--
+    <developers>
+      <developer>
+        <id>vtitov</id>
+        <name>Valentin Titov</name>
+        <email>nobody@nowhere.nowhere</email>
+      </developer>
+    </developers> -->
+
+    <!--
+    <url>https://wiki.jenkins.io/display/JENKINS/Embedded+Kafka+Plugin</url>
+    <scm>
+        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    </scm>
+    -->
+
+    <repositories>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.plugins</groupId>
+                <artifactId>embedded-plugins-bom</artifactId>
+                <version>${embedded.plugins.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>embedded-config</artifactId>
+            <version>${embedded.config.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-jms-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_${kafka.scala.version}</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- vavr -->
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--lombok/delombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <!-- explicitly enable for deploy-->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target unless="maven.test.skip">
+                                <mkdir dir="${project.basedir}/logs"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

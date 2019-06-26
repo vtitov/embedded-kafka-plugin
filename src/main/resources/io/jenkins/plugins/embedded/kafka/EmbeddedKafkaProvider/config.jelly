@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler" xmlns:p="/lib/hudson/project">
+<f:section title="${%Embedded Kafka Plugin}">
+    <f:block>
+        <table>
+            <!--<f:optionalBlock name="dynamic" title="Kafka Settings">-->
+
+            <!--<f:advanced title="Kafka Settings">-->
+
+            <!--<st:include page="configure-advanced.jelly" optional="true" />-->
+            <!--<f:entry field="label" title="${%Label}">-->
+            <!--<f:textbox/>-->
+            <!--</f:entry>-->
+
+            <f:entry field="kafkaPort" title="${%Kafka Port}">
+                <f:textbox/>
+            </f:entry>
+            <f:entry field="zkPort" title="${%Zookeeper Port}">
+                <f:textbox/>
+            </f:entry>
+            <f:entry field="path" title="${%Kafka and Zookeeper Base Directory}">
+                <f:textbox/>
+            </f:entry>
+
+            <!--</f:advanced>-->
+
+            <!--</f:optionalBlock>-->
+        </table>
+    </f:block>
+</f:section>
+</j:jelly>
